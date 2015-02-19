@@ -16,7 +16,8 @@ a little more flexibility to fit in more use cases.
 ## Getting started
 
 ```bash
-make
+go run *.go
+make build
 ```
 
 ## Plan

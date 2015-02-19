@@ -13,7 +13,7 @@ const layoutContents = `
 	  <header class="main-header">
 		<h1>Hazel</h1>
 		<nav>
-		  <a href="/apps">Applications</a>
+		  <a href="/logout">Logout</a>
 		</nav>
 	  </header>
 

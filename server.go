@@ -16,6 +16,7 @@ type Server struct {
 	Cfg Config
 	DB  *sql.DB
 	mux *http.ServeMux
+	tm  *TemplateMap
 }
 
 // Creates a new server from config, registers handlers but wait to boot
@@ -29,6 +30,7 @@ func (s *Server) Setup() {
 	s.mux = http.NewServeMux()
 	s.DB = data.Connect(s.Cfg.PostgresURL)
 	s.registerHandlers()
+	s.tm = fillTemplateMap()
 }
 
 // Boot the server and starts litening on the configured port
@@ -48,12 +50,18 @@ func (s *Server) registerHandlers() {
 	}
 
 	s.mux.Handle("/", mmChain.Then(s))
+	aEndpoint := ApplicationsEndpoint{NewEndpintBaseWithServer("/apps", s)}
+	s.mux.Handle("/apps", mmChain.Then(NewHandlerForEndpoint(&aEndpoint)))
+	s.mux.Handle("/apps/", mmChain.Then(NewHandlerForEndpoint(&aEndpoint)))
 }
 
-// Router the request to the right ressource based on the url path prefix
+// This handler takes care of 404s and misc paths that don't belong in an
+// Endpoint
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		w.Write([]byte("Hai"))
+		http.Redirect(w, r, "/apps", 302)
+	} else if r.URL.Path == "/styles.css" {
+		RenderStyles(w)
 	} else {
 		serveNotFound(w, r)
 	}

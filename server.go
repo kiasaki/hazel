@@ -50,9 +50,12 @@ func (s *Server) registerHandlers() {
 	}
 
 	s.mux.Handle("/", mmChain.Then(s))
-	aEndpoint := ApplicationsEndpoint{NewEndpintBaseWithServer("/apps", s)}
+	aEndpoint := ApplicationsEndpoint{NewEndpointBaseWithServer("/apps", s)}
 	s.mux.Handle("/apps", mmChain.Then(NewHandlerForEndpoint(&aEndpoint)))
 	s.mux.Handle("/apps/", mmChain.Then(NewHandlerForEndpoint(&aEndpoint)))
+	sEndpoint := StacksEndpoint{NewEndpointBaseWithServer("/stacks", s)}
+	s.mux.Handle("/stacks", mmChain.Then(NewHandlerForEndpoint(&sEndpoint)))
+	s.mux.Handle("/stacks/", mmChain.Then(NewHandlerForEndpoint(&sEndpoint)))
 }
 
 // This handler takes care of 404s and misc paths that don't belong in an

@@ -22,7 +22,7 @@ img {
   line-height: 20px;
   padding: 10px 15px;
   border: none;
-  background: #859900;
+  background: #ccc;
   color: #fff;
   font-weight: bold;
   letter-spacing: 1px;
@@ -32,6 +32,43 @@ img {
 a.btn {
   text-decoration: none;
 }
+.btn.btn-save {
+  background: #27ae60;
+}
+
+form.form {
+  width: 100%;
+  background: #ecf0f1;
+  border: 1px solid #dedede;
+  padding: 30px;
+  border-radius: 3px;
+}
+form.form label {
+  display: block;
+  line-height: 20px;
+  font-size: 13px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  color: #999;
+}
+form.form input, form.form select {
+  border: 1px solid #dedede;
+  background: #fff;
+  border-radius: 3px;
+  padding: 8px 12px;
+  line-height: 22px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+form.form footer {
+  background: #fff;
+  margin: 18px -30px -30px -30px;
+  padding: 15px 30px;
+  text-align: right;
+}
+form.form footer .btn {
+  border-radius: 3px;
+}
 
 div.wrapper {
   position: relative;
@@ -39,7 +76,7 @@ div.wrapper {
   margin: 0 auto;
   box-shadow: 0 0 4px rgba(0,0,0,0.25);
   background: #fff;
-  height: 100%;
+  height: auto;
   min-height: 100%;
 }
 
@@ -86,6 +123,7 @@ nav.main-nav a:hover {
 
 section.main-content {
   padding: 15px;
+  padding-bottom: 65px;
 }
 section.main-content h1 {
   margin: 0 0 15px;
@@ -101,6 +139,29 @@ footer.main-footer {
 }
 footer.main-footer a {
   color: #bdc3c7;
+}
+
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.table td, table.table th {
+  padding: 16px 12px;
+  line-height: 20px;
+  border-bottom: 1px solid #ccc;
+}
+table.table td:first-child {
+  border-left: 1px solid #ccc;
+}
+table.table td:last-child {
+  border-right: 1px solid #ccc;
+}
+table.table th {
+  font-weight: normal;
+  border-bottom: none;
+  text-align: left;
+  background: #8e44ad;
+  color: #fff;
 }
 `
 

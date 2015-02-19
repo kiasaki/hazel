@@ -24,12 +24,6 @@ func executeTemplate(t *template.Template, data interface{}) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-func fillTemplateMap() *TemplateMap {
-	tm := TemplateMap{}
-	tm["applications_index"] = template.Must(loadLayoutTemplate().Parse(applicationsIndexContents))
-	return &tm
-}
-
 type TemplateMap map[string]*template.Template
 
 func (tm *TemplateMap) RenderPage(w http.ResponseWriter, name string, data interface{}) {

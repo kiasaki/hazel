@@ -133,6 +133,6 @@ type EndpointBaseWithServer struct {
 	s *Server
 }
 
-func NewEndpintBaseWithServer(prefix string, s *Server) *EndpointBaseWithServer {
-	return &EndpointBaseWithServer{&EndpointBase{"/apps"}, s}
+func NewEndpointBaseWithServer(prefix string, s *Server) *EndpointBaseWithServer {
+	return &EndpointBaseWithServer{&EndpointBase{prefix}, s}
 }

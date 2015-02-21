@@ -15,3 +15,7 @@ func (e *StacksEndpoint) Index(w http.ResponseWriter, r *http.Request) {
 func (e *StacksEndpoint) Create(w http.ResponseWriter, r *http.Request) {
 	e.s.tm.RenderPage(w, "stacks_create", nil)
 }
+
+func (e *StacksEndpoint) Store(w http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("name")
+}

@@ -22,6 +22,6 @@ make build
 
 ## Plan
 
-![Plan](https://raw.githubusercontent.com/kiasaki/hazel/master/images/plan.jpg)
+![Plan](https://raw.githubusercontent.com/kiasaki/hazel/master/images/plan.png)
 
 ![Screenshot](https://raw.githubusercontent.com/kiasaki/hazel/master/images/screenshot.png)

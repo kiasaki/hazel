@@ -1,0 +1,40 @@
+div.auth-page {
+  min-height: 600px;
+  margin-top: -15px;
+  padding: 1px 0;
+}
+
+section.auth-box {
+  background: #fff;
+  border-radius: 3px;
+  width: 360px;
+  margin: 75px auto;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  padding: 30px 15px 15px;
+}
+section.auth-box h1 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 300;
+  margin: 0 0 30px;
+}
+section.auth-box h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 30px;
+}
+section.auth-box .fields {
+  display: flex;
+}
+section.auth-box .field {
+  flex: 1;
+}
+section.auth-box .field:first-child {
+  margin-right: 12px;
+}
+
+section.auth-box .btn {
+  margin-top: 30px;
+  width: 100%;
+}

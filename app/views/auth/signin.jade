@@ -1,0 +1,22 @@
+extends ../_layout
+
+block styles
+  link(rel="stylesheet", href="/stylesheets/auth.css")
+
+block content
+  div.container
+    div.auth-page
+      section.auth-box
+        h1 Sign in
+
+        - if (error)
+          p.alert.alert-error= error
+
+        form(method="post", action="/signin")
+          label Email
+          input(type="text", name="email", placeholder="ex. pierre@aol.com" value=email)
+
+          label Password
+          input(type="password", name="password")
+
+          button.btn.btn-green(type="submit") Signin

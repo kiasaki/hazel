@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/maxwellhealth/bongo"
-	"labix.org/v2/mgo"
+	"fmt"
 )
 
 type App struct {
-	bongo.DocumentBase `bson:",inline"`
-	FirstName          string
-	LastName           string
-	Gender             string
+	Slug string
+}
+
+func (a App) Exists() (bool, error) {
+	bucket := awsS3.Bucket(cfg.Bucket)
+	path := fmt.Sprintf("/apps/%s/config.json", a.Slug)
+	return bucket.Exists(path)
 }

@@ -1,0 +1,35 @@
+{
+	"ImportPath": "github.com/kiasaki/hazel/api",
+	"GoVersion": "go1.4",
+	"Deps": [
+		{
+			"ImportPath": "github.com/jessevdk/go-flags",
+			"Comment": "v1-265-g1c87b97",
+			"Rev": "1c87b9727cd7c200be13a5d8280d7ea514469235"
+		},
+		{
+			"ImportPath": "github.com/maxwellhealth/bongo",
+			"Comment": "v0.9.2-2-g42e038f",
+			"Rev": "42e038f4b09354cdbf1709be80c2cdb1e0fbd1b1"
+		},
+		{
+			"ImportPath": "github.com/maxwellhealth/go-dotaccess",
+			"Rev": "ae070a2d2a38fd7233e255ded21fb26fe36b4796"
+		},
+		{
+			"ImportPath": "github.com/oleiade/reflections",
+			"Comment": "0.1.2-2-g632977f",
+			"Rev": "632977f98cd34d217c4b57d0840ec188b3d3dcaf"
+		},
+		{
+			"ImportPath": "github.com/zenazn/goji",
+			"Comment": "v0.9.0-10-g739f05c",
+			"Rev": "739f05c9497895aee8d398a8ff38fb0517c4d670"
+		},
+		{
+			"ImportPath": "labix.org/v2/mgo",
+			"Comment": "287",
+			"Rev": "gustavo@niemeyer.net-20140501184651-975yyw9ipld92pji"
+		}
+	]
+}

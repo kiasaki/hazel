@@ -1,0 +1,8 @@
+{
+  "name": "nodejs-small",
+  "description": "A nodejs env suitable for development of qa. It's composed of an ELB in front of two `t2.small` instances.",
+  "templates": {
+    "upstart/consul_client.conf.tmpl": "upstart/consul_client.conf",
+    "upstart/nodejs.conf.tmpl": "upstart/nodejs.conf"
+  }
+}

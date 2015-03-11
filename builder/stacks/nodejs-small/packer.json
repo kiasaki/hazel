@@ -1,0 +1,41 @@
+{
+  "variables": {
+    "aws_access_key": "YOUR_ACCESS_KEY",
+    "aws_secret_key": "YOUR_SECREY_KEY",
+    "aws_region": "",
+    "service_name": "",
+    "build_id": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `aws_region`}}",
+    "source_ami": "ami-9a562df2",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "{{user `service_name`}}-{{user `build_id`}}"
+  }],
+  "provisioners": [{
+      "type": "shell",
+      "inline": ["sudo mkdir /ops", "sudo chmod a+w /ops"]
+    }, {
+      "type": "file",
+      "source": ".",
+      "destination": "/ops"
+    }, {
+      "type": "shell",
+      "inline": ["sudo mkdir /app", "sudo chmod a+w /app"]
+    }, {
+      "type": "file",
+      "source": "/hazel/app",
+      "destination": "/app"
+    }, {
+      "type": "shell",
+      "script": "scripts/base.sh"
+    }, {
+      "type": "shell",
+      "script": "scripts/nodejs.sh"
+    }
+  ]
+}

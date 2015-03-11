@@ -1,15 +1,28 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
 type App struct {
-	Slug string
+	Slug  string `json:"slug"`
+	Stack string `json:"stack"`
 }
 
-func (a App) Exists() (bool, error) {
+func (a *App) Get() error {
 	bucket := awsS3.Bucket(cfg.Bucket)
 	path := fmt.Sprintf("/apps/%s/config.json", a.Slug)
-	return bucket.Exists(path)
+
+	bytes, err := bucket.Get(path)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(bytes, a)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

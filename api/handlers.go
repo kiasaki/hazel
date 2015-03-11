@@ -58,14 +58,13 @@ func handleBuildCreate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var app = &App{Slug: c.URLParams["appSlug"]}
 	var buildId = time.Now().Format("20060102150405")
 
-	if ok, err := app.Exists(); err == nil {
-		if ok {
-
-			sendJson(w, jsonMap{"success": true, "build_id": buildId}, http.StatusCreated)
-		} else {
-			sendJson(w, jsonMap{"success": false, "error": "App not found"}, http.StatusNotFound)
-		}
+	if err := app.Get(); err == nil {
+		sendJson(w, jsonMap{"success": true, "build_id": buildId}, http.StatusCreated)
 	} else {
-		sendError(w, err.Error())
+		if err.Error() == "The specified key does not exist." {
+			sendJson(w, jsonMap{"success": false, "error": "App not found"}, http.StatusNotFound)
+		} else {
+			sendError(w, err.Error())
+		}
 	}
 }

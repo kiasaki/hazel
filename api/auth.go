@@ -10,7 +10,9 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/kiasaki/batbelt/rest"
+	"github.com/kiasaki/batbelt/uuid"
 	"github.com/kiasaki/hazel/api/data"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var authHeaderPrefix = "Bearer "
@@ -19,15 +21,16 @@ type contextKey int
 
 const AuthContextKey contextKey = 10
 
-type LoginService struct {
+type AuthService struct {
 	s *Server
 }
 
-func (e *LoginService) Register(router *mux.Router) {
+func (e *AuthService) Register(router *mux.Router) {
 	e.s.AddFilters(e.authMiddleware)
 
-	e.s.Logger.Println("Registering [LoginService] at path [/auth]")
+	e.s.Logger.Println("Registering [AuthService] at path [/auth]")
 	router.HandleFunc("/auth/login", e.Login).Methods("POST")
+	router.HandleFunc("/auth/signup", e.Signup).Methods("POST")
 }
 
 // This is what is stored in the context and accessible from handlers
@@ -36,7 +39,7 @@ type Authorization struct {
 	Token jwt.Token
 }
 
-func (e *LoginService) authMiddleware(h http.Handler) http.Handler {
+func (e *AuthService) authMiddleware(h http.Handler) http.Handler {
 	keyFunc := func(_ *jwt.Token) (interface{}, error) {
 		return []byte(e.s.Config.JwtSecret), nil
 	}
@@ -89,26 +92,62 @@ func (e *LoginService) authMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-func TokenForUser(u data.User) (string, error) {
+func TokenForUser(secret string, u data.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
+	var teamIds []string
+	for _, team := range u.Teams {
+		teamIds = append(teamIds, team.ID)
+	}
+
 	token.Claims["u"] = u.ID
-	token.Claims["t"] = []string{"1"}
+	token.Claims["t"] = teamIds
 	token.Claims["name"] = u.FullName
 	token.Claims["scope"] = "users applications builds"
 	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-	tokenString, err := token.SignedString([]byte(e.s.Config.JwtSecret))
+	tokenString, err := token.SignedString([]byte(secret))
 	return tokenString, err
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func (e *LoginService) Login(w http.ResponseWriter, r *http.Request) {
-	var u = data.User{}
-	tokenString, err := TokenForUser(u)
+func (e *AuthService) Login(w http.ResponseWriter, r *http.Request) {
+	var request = LoginRequest{}
+	err := rest.Bind(r, &request)
+	if err != nil {
+		rest.SetBadRequestResponse(w)
+		rest.WriteEntity(w, rest.J{"error": "A login request needs an email and password to be passed in"})
+		return
+	}
+
+	// Find the user associated with email address requested
+	user, err := e.s.DB.GetUserByEmail(request.Email)
+	if err == data.ErrEntityNotFound {
+		rest.SetNotFoundResponse(w)
+		rest.WriteEntity(w, rest.J{"error": "There is no user with that email address"})
+		return
+	} else if err != nil {
+		rest.SetInternalServerErrorResponse(w, err)
+		return
+	}
+
+	// Check users password against the one provided
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
+	if err != nil {
+		e.s.Logger.Println(err, user, request)
+		rest.SetBadRequestResponse(w)
+		rest.WriteEntity(w, rest.J{"error": "Wrong password or email address provided"})
+		return
+	}
+
+	tokenString, err := TokenForUser(e.s.Config.JwtSecret, user)
 	if err != nil {
 		rest.SetInternalServerErrorResponse(w, err)
 		return
@@ -119,7 +158,12 @@ func (e *LoginService) Login(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (e *LoginService) Signup(w http.ResponseWriter, r *http.Request) {
+type SignupResponse struct {
+	Token string    `json:"token"`
+	User  data.User `json:"user"`
+}
+
+func (e *AuthService) Signup(w http.ResponseWriter, r *http.Request) {
 	var user = data.User{}
 	err := rest.Bind(r, &user)
 	if err != nil || !user.Valid() {
@@ -128,22 +172,40 @@ func (e *LoginService) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := user.HashPassword()
-	if err != nil {
-		rest.SetInternalServerError(w)
+	// Check for duplicate email address
+	sameEmailUser, err := e.s.DB.GetUserByEmail(user.Email)
+	if err != nil && err != data.ErrEntityNotFound {
+		rest.SetInternalServerErrorResponse(w, err)
 		return
 	}
-	err := e.s.DB.Save(user)
-	if err != nil {
-		rest.SetInternalServerError(w)
-		return
-	}
-	token, err := TokenForUser(user)
-	if err != nil {
-		rest.SetInternalServerError(w)
+	// At this point either err is nil of we didn't find user, so check match
+	if sameEmailUser.Email == user.Email {
+		rest.SetBadRequestResponse(w)
+		rest.WriteEntity(w, rest.J{"error": "Email address already taken"})
 		return
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 11)
+	if err != nil {
+		rest.SetInternalServerErrorResponse(w, err)
+		return
+	}
+	user.ID = uuid.NewUUID().String()
+	user.Password = string(hashedPassword)
+	e.s.Logger.Println(user)
+	err = e.s.DB.Save(user.ID, user)
+	if err != nil {
+		rest.SetInternalServerErrorResponse(w, err)
+		return
+	}
+	token, err := TokenForUser(e.s.Config.JwtSecret, user)
+	if err != nil {
+		rest.SetInternalServerErrorResponse(w, err)
+		return
+	}
+
+	// Filter out password
+	user.Password = ""
 	rest.SetOKResponse(w, SignupResponse{
 		Token: token,
 		User:  user,

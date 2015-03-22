@@ -2,10 +2,14 @@ package data
 
 import (
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/boltdb/bolt"
 )
+
+var ErrEntityNotFound = errors.New("Error: Entity not found")
+var ErrEntityFound = errors.New("Error: Entity found")
 
 type Database struct {
 	DBFile string
@@ -56,6 +60,20 @@ func (d *Database) Get(key string, entity Model) error {
 	return d.DB.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(entity.Bucket())
 		rawEntity := bucket.Get([]byte(key))
+		if rawEntity == nil {
+			return ErrEntityNotFound
+		}
 		return json.Unmarshal(rawEntity, entity)
+	})
+}
+
+func (d *Database) Save(key string, entity Model) error {
+	return d.DB.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket(entity.Bucket())
+		entityBytes, err := json.Marshal(entity)
+		if err != nil {
+			return err
+		}
+		return bucket.Put([]byte(key), entityBytes)
 	})
 }

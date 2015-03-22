@@ -36,7 +36,7 @@ func (s *Server) Setup() {
 	s.DB = data.NewDatabase(s.Config.DBFile)
 
 	// Register services
-	loginService := LoginService{s}
+	loginService := AuthService{s}
 	loginService.Register(s.Router)
 
 	// Register endpoints

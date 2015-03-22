@@ -15,5 +15,5 @@ func (e *ApplicationsEndpoint) Path() string {
 }
 
 func (e *ApplicationsEndpoint) GET(w http.ResponseWriter, r *http.Request) {
-	rest.SetOKResponse(w, map[string]string{"gerp": "derp"})
+	rest.SetOKResponse(w, rest.J{"applications": []string{}})
 }

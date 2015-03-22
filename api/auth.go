@@ -141,7 +141,6 @@ func (e *AuthService) Login(w http.ResponseWriter, r *http.Request) {
 	// Check users password against the one provided
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
-		e.s.Logger.Println(err, user, request)
 		rest.SetBadRequestResponse(w)
 		rest.WriteEntity(w, rest.J{"error": "Wrong password or email address provided"})
 		return

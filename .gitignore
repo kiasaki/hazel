@@ -6,4 +6,5 @@ infrastructure/terraform.tfvars
 
 hazel-api
 hazel-builder
+hazel
 hazel.db

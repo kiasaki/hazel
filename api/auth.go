@@ -39,6 +39,13 @@ type Authorization struct {
 	Token jwt.Token
 }
 
+func GetRequestAuthorization(r *http.Request) Authorization {
+	if a, ok := context.Get(r, AuthContextKey); ok {
+		return a.(Authorization)
+	}
+	return nil
+}
+
 func (e *AuthService) authMiddleware(h http.Handler) http.Handler {
 	keyFunc := func(_ *jwt.Token) (interface{}, error) {
 		return []byte(e.s.Config.JwtSecret), nil

@@ -6,4 +6,4 @@ infrastructure/terraform.tfvars
 
 hazel-api
 hazel-builder
-.gitignore
+hazel.db

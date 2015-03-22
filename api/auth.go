@@ -39,11 +39,11 @@ type Authorization struct {
 	Token jwt.Token
 }
 
-func GetRequestAuthorization(r *http.Request) Authorization {
-	if a, ok := context.Get(r, AuthContextKey); ok {
-		return a.(Authorization)
+func GetRequestAuthorization(r *http.Request) (Authorization, bool) {
+	if a := context.Get(r, AuthContextKey); a != nil {
+		return a.(Authorization), true
 	}
-	return nil
+	return Authorization{}, false
 }
 
 func (e *AuthService) authMiddleware(h http.Handler) http.Handler {

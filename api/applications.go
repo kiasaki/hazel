@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/gorilla/context"
 	"github.com/kiasaki/batbelt/rest"
 	"github.com/kiasaki/batbelt/uuid"
+	"github.com/kiasaki/hazel/api/data"
 )
 
 type ApplicationsEndpoint struct {
@@ -30,7 +30,7 @@ type ApplicationCreateRequest struct {
 func (e *ApplicationsEndpoint) POST(w http.ResponseWriter, r *http.Request) {
 	var request ApplicationCreateRequest
 	err := rest.Bind(r, &request)
-	if err != nil {
+	if err != nil || request.GitURL == "" || request.StackID == "" {
 		rest.SetBadRequestResponse(w)
 		rest.WriteEntity(w, rest.J{"error": "Application creation request requires name, git_url and stack_id"})
 		return
@@ -45,8 +45,8 @@ func (e *ApplicationsEndpoint) POST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch current user, we need it for app owner
-	auth := GetRequestAuthorization(r)
-	if auth == nil {
+	auth, ok := GetRequestAuthorization(r)
+	if !ok {
 		rest.SetInternalServerErrorResponse(w, nil)
 		return
 	}
@@ -62,7 +62,7 @@ func (e *ApplicationsEndpoint) POST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Save new app
-	err := e.s.DB.Save(app.ID, app)
+	err = e.s.DB.Save(app.ID, app)
 	if err != nil {
 		rest.SetInternalServerErrorResponse(w, err)
 		return

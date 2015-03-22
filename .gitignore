@@ -3,3 +3,7 @@ app/npm-debug.log
 app/config.json
 infrastructure/plan.tfplan
 infrastructure/terraform.tfvars
+
+hazel-api
+hazel-builder
+.gitignore

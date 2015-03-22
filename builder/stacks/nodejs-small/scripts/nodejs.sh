@@ -20,8 +20,8 @@ cat > /etc/consul.d/node.json <<-EOF
     "tags": ["web", "{{.Build.Id}}"],
     "check": {
       "id": "http",
-      "name": "HTTP service on port 8000",
-      "http": "http://localhost:8000/ping",
+      "name": "HTTP service on port 8080",
+      "http": "http://localhost:8080/ping",
       "interval": "10s",
       "timeout": "2s"
     }

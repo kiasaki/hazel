@@ -1,5 +1,0 @@
-{
-  "NODE_ENV": "development",
-  "SECRET": "keyboardcat",
-  "MONGOLAB_URI": "mongodb://localhost/hazel"
-}

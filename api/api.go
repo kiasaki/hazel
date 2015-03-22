@@ -1,6 +1,8 @@
 package api
 
 import (
+	"flag"
+
 	"github.com/kiasaki/batbelt/rest"
 )
 
@@ -9,7 +11,11 @@ var version = "0.1.0"
 
 type Server struct {
 	rest.Server
-	Config string
+	Config Config
+}
+
+type Config struct {
+	JwtSecret string
 }
 
 func NewServer() Server {
@@ -18,7 +24,13 @@ func NewServer() Server {
 
 func (s *Server) Setup() {
 	// Load config
-	s.Config = "derp"
+	s.Config = Config{}
+	flag.StringVar(&s.Config.JwtSecret, "jwt-secret", "keyboardcat", "Key to sign JWT tokens")
+	flag.Parse()
+
+	// Register services
+	loginService := LoginService{s}
+	loginService.Register(s.Router)
 
 	// Register endpoints
 	s.Register(&ApplicationsEndpoint{s})

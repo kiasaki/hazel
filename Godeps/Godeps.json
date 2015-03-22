@@ -1,0 +1,56 @@
+{
+	"ImportPath": "github.com/kiasaki/hazel",
+	"GoVersion": "go1.4.2",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/boltdb/bolt",
+			"Comment": "v1.0-47-g4d30731",
+			"Rev": "4d30731e9122988d2012a9574c43f80f054a0d3b"
+		},
+		{
+			"ImportPath": "github.com/braintree/manners",
+			"Comment": "0.3.1-2-g5280e25",
+			"Rev": "5280e250f2795914acbeb2bf3b55dd5a2d1fba52"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v2.2.0-15-g61124b6",
+			"Rev": "61124b62ad244d655f87d944aefaa2ae5a0d2f16"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "8096f47503459bcc74d1f4c487b7e6e42e5746b5"
+		},
+		{
+			"ImportPath": "github.com/kiasaki/batbelt/http/mm",
+			"Rev": "d11ca0b3a6bd51efd0dae62a588e55ae79ae5509"
+		},
+		{
+			"ImportPath": "github.com/kiasaki/batbelt/rest",
+			"Rev": "d11ca0b3a6bd51efd0dae62a588e55ae79ae5509"
+		},
+		{
+			"ImportPath": "github.com/kiasaki/batbelt/uuid",
+			"Rev": "d11ca0b3a6bd51efd0dae62a588e55ae79ae5509"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/cli",
+			"Rev": "8230c3f351c1efa17429df4e771ab8dcd67ff4bd"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "b7d6bf2c61544745a02f83dec90393985fc3a065"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "b7d6bf2c61544745a02f83dec90393985fc3a065"
+		}
+	]
+}

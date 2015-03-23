@@ -10,5 +10,8 @@ push:
 plan:
 	terraform plan -out plan.tfplan
 
+destroy:
+	terraform plan -destroy -out plan.tfplan
+
 apply:
 	terraform apply plan.tfplan

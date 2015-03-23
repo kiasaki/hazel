@@ -22,6 +22,10 @@ variable "aws_region" {
   default = "us-east-1"
   description = "The region of AWS, for AMI lookups."
 }
+variable "aws_az" {
+  default = "us-east-1d"
+}
+
 variable "aws_access_key" {
   description = "AWS Access key."
 }
@@ -36,6 +40,9 @@ variable "aws_zone_id" {
 }
 variable "aws_zone_tld" {
   description = "Zone TLD"
+}
+variable "key_path" {
+  description = "Path to secret key."
 }
 
 variable "etcd_discovery_url" {

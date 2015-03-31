@@ -3,9 +3,10 @@ import {STATUS_CODES} from 'http'
 
 export default function responseMiddleware(err, req, res, next) {
   if (err instanceof Error) {
+    console.error(err);
     respondWithError(res, err)
   } else {
-    res.json(err);
+    res.send(err);
   }
 }
 

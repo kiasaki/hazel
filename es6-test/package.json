@@ -1,0 +1,23 @@
+{
+  "name": "hazel-api",
+  "version": "1.0.0",
+  "description": "Hazel API",
+  "repository": "git@github.com:kiasaki/hazel.git",
+  "main": "bootstrap.js",
+  "scripts": {
+    "start": "node bootstrap.js",
+    "build": "babel --modules common --out-dir dist app.js",
+    "buildwatch": "babel --modules common --out-dir dist -w app.js",
+    "test": "mocha --compilers js:babel/register"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "mocha": "^2.2.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.12.2",
+    "express": "^4.12.3"
+  }
+}
